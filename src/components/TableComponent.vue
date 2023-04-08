@@ -19,14 +19,21 @@
               <tr></tr>
               <tr>
                 <th scope="col" class="w-25" @click="sortList('DateSent')">DATE SENT
-                  <span v-if="sortedbyASC">
+                  <span v-if="sortedbyASC && sortKey === 'DateSent'" class="opacity-100">
                     <font-awesome-icon :icon="['fas', 'fa-caret-up']" />
                   </span>
-                  <span v-else>
+                  <span v-else class="opacity-25">
                     <font-awesome-icon :icon="['fas', 'fa-caret-down']" />
                   </span>
                 </th>
-                <th scope="col" class="w-50">COMPANY</th>
+                <th scope="col" class="w-50" @click="sortList('Company')">COMPANY
+                  <span v-if="sortedbyASC && sortKey === 'Company'" class="opacity-100">
+                    <font-awesome-icon :icon="['fas', 'fa-caret-up']" />
+                  </span>
+                  <span v-else class="opacity-25">
+                    <font-awesome-icon :icon="['fas', 'fa-caret-down']" />
+                  </span>
+                </th>
                 <th scope="col">FIX</th>
                 <th scope="col">FRN</th>
                 <th scope="col">FIX</th>
@@ -102,7 +109,7 @@ export default {
     return {
       opened: [],
       filter: '',
-      quotesData: [],
+      sortKey: '',
       sortedData: this.data,
       sortedbyASC: false
     }
@@ -131,6 +138,8 @@ export default {
         this.sortedData.sort((x, y) => (x[sortBy] < y[sortBy] ? -1 : 1))
         this.sortedbyASC = true
       }
+
+      this.sortKey = sortBy
     }
   },
   computed: {
@@ -154,6 +163,9 @@ export default {
 * {
   margin : 0;
   padding : 0;
+}
+tr > th {
+  cursor: pointer;
 }
 .border-mx-transparency {
   border-right: 10px solid transparent;
