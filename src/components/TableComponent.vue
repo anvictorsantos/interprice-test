@@ -4,8 +4,19 @@
       <div class="row wrapper">
         <div class="col-md-12">
           <input class="float-start form-control form-control-sm my-4 w-25" type="search" v-model="filter" placeholder="Filter by company name ...">
-          <table class="table">
+          <table class="table table-bordered text-center">
             <thead class="border-bottom-0">
+              <col>
+              <colgroup span="2"></colgroup>
+              <colgroup span="2"></colgroup>
+              <tr>
+                <td rowspan="2" class="border border-0"></td>
+                <td rowspan="2" class="border border-0"></td>
+                <th colspan="2" scope="colgroup" class="border-mx-transparency">5 YRS</th>
+                <th colspan="2" scope="colgroup" class="border-mx-transparency">10 YRS</th>
+                <th colspan="2" scope="colgroup" class="border-mx-transparency">40 YRS</th>
+              </tr>
+              <tr></tr>
               <tr>
                 <th scope="col" class="w-25" @click="sortList('DateSent')">DATE SENT
                   <span v-if="sortedbyASC">
@@ -16,9 +27,15 @@
                   </span>
                 </th>
                 <th scope="col" class="w-50">COMPANY</th>
+                <th scope="col">FIX</th>
+                <th scope="col">FRN</th>
+                <th scope="col">FIX</th>
+                <th scope="col">FRN</th>
+                <th scope="col">FIX</th>
+                <th scope="col">FRN</th>
               </tr>
             </thead>
-            <tbody v-for="item in filteredRecipes" :key="item.Id">
+            <tbody v-for="item in filteredData" :key="item.Id">
               <template v-if="Array.isArray(item.Quote)">
                 <tr @click="toggle(item.Id)">
                   <td>
@@ -31,11 +48,23 @@
                     {{ item.DateSent }}
                   </td>
                   <td v-html="highlightMatches(item.Company)"></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
                 <template v-if="opened.includes(item.Id)">
-                  <tr v-for="(quote, index) in item.Quote" :key="index">
+                  <tr v-for="(value, index) in item.Quote" :key="index">
                     <td></td>
-                    <td>{{ quote.Yield }}</td>
+                    <td>{{ index }} : {{ value }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 </template>
               </template>
@@ -43,6 +72,12 @@
                 <tr>
                   <td>{{ item.DateSent }}</td>
                   <td>{{ item.Company }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                 </tr>
               </template>
             </tbody>
@@ -67,6 +102,7 @@ export default {
     return {
       opened: [],
       filter: '',
+      quotesData: [],
       sortedData: this.data,
       sortedbyASC: false
     }
@@ -98,7 +134,7 @@ export default {
     }
   },
   computed: {
-    filteredRecipes () {
+    filteredData () {
       let sortedData = this.data
       if (this.filter !== '' && this.filter) {
         sortedData = sortedData.filter((item) => {
@@ -118,6 +154,10 @@ export default {
 * {
   margin : 0;
   padding : 0;
+}
+.border-mx-transparency {
+  border-right: 10px solid transparent;
+  border-left: 10px solid transparent;
 }
 .wrapper {
   min-height : 100vh;
