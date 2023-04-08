@@ -18,17 +18,38 @@
                 <th scope="col" class="w-50">COMPANY</th>
               </tr>
             </thead>
-            <tbody>
-              <tr v-for="item in filteredRecipes" :key="item.Id">
-                <td>{{ item.DateSent }}</td>
-                <td colspan="2" v-html="highlightMatches(item.Company)"></td>
-              </tr>
+            <tbody v-for="item in filteredRecipes" :key="item.Id">
+              <template v-if="Array.isArray(item.Quote)">
+                <tr @click="toggle(item.Id)">
+                  <td>
+                    <span v-if="opened.includes(item.Id)">
+                      <font-awesome-icon :icon="['fas', 'angle-down']" />
+                    </span>
+                    <span v-else>
+                      <font-awesome-icon :icon="['fas', 'angle-right']" />
+                    </span>
+                    {{ item.DateSent }}
+                  </td>
+                  <td v-html="highlightMatches(item.Company)"></td>
+                </tr>
+                <template v-if="opened.includes(item.Id)">
+                  <tr v-for="(quote, index) in item.Quote" :key="index">
+                    <td></td>
+                    <td>{{ quote.Yield }}</td>
+                  </tr>
+                </template>
+              </template>
+              <template v-else>
+                <tr>
+                  <td>{{ item.DateSent }}</td>
+                  <td>{{ item.Company }}</td>
+                </tr>
+              </template>
             </tbody>
             <tfoot class="border border-dark">
               <tr>
-                <td colspan="1"></td>
+                <td></td>
                 <td>Average by</td>
-                <td>Footer</td>
               </tr>
             </tfoot>
           </table>
@@ -44,12 +65,21 @@ export default {
   props: ['data'],
   data () {
     return {
+      opened: [],
       filter: '',
       sortedData: this.data,
       sortedbyASC: false
     }
   },
   methods: {
+    toggle (id) {
+      const index = this.opened.indexOf(id)
+      if (index > -1) {
+        this.opened.splice(index, 1)
+      } else {
+        this.opened.push(id)
+      }
+    },
     highlightMatches (text) {
       const matchExists = text?.toLowerCase().includes(this.filter?.toLowerCase())
       if (!matchExists) return text
@@ -88,9 +118,6 @@ export default {
 * {
   margin : 0;
   padding : 0;
-}
-tr:last-child {
-  border-bottom: 1px solid #000000;
 }
 .wrapper {
   min-height : 100vh;
