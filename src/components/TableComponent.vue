@@ -5,9 +5,9 @@
         <div class="col-md-12">
           <input class="float-start form-control form-control-sm my-4 w-25" type="search" v-model="filter" placeholder="Filter by company name ...">
           <table class="table">
-            <thead>
+            <thead class="border-bottom-0">
               <tr>
-                <th scope="col" @click="sortList('DateSent')">DATE SENT
+                <th scope="col" class="w-25" @click="sortList('DateSent')">DATE SENT
                   <span v-if="sortedbyASC">
                     <font-awesome-icon :icon="['fas', 'fa-caret-up']" />
                   </span>
@@ -15,7 +15,7 @@
                     <font-awesome-icon :icon="['fas', 'fa-caret-down']" />
                   </span>
                 </th>
-                <th scope="col">COMPANY</th>
+                <th scope="col" class="w-50">COMPANY</th>
               </tr>
             </thead>
             <tbody>
@@ -24,6 +24,13 @@
                 <td colspan="2" v-html="highlightMatches(item.Company)"></td>
               </tr>
             </tbody>
+            <tfoot class="border border-dark">
+              <tr>
+                <td colspan="1"></td>
+                <td>Average by</td>
+                <td>Footer</td>
+              </tr>
+            </tfoot>
           </table>
         </div>
       </div>
@@ -82,7 +89,9 @@ export default {
   margin : 0;
   padding : 0;
 }
-
+tr:last-child {
+  border-bottom: 1px solid #000000;
+}
 .wrapper {
   min-height : 100vh;
   display: flex;
