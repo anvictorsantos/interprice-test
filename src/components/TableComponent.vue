@@ -3,6 +3,32 @@
     <div class="container">
       <div class="row wrapper">
         <div class="col-md-12">
+          <div class="col-md-12 d-flex flex-row">
+            <div class="d-block d-md-flex flex-row col-md-2">
+              <input type="checkbox" class="btn-check" id="inlineCheckbox1" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="inlineCheckbox1">USD</label>
+              <input type="checkbox" class="btn-check" id="inlineCheckbox2" autocomplete="off">
+              <label class="btn btn-outline-primary" for="inlineCheckbox2">EUR</label>
+              <input type="checkbox" class="btn-check" id="inlineCheckbox3" autocomplete="off">
+              <label class="btn btn-outline-primary" for="inlineCheckbox3">CAD</label>
+            </div>
+            <div class="d-flex flex-row col-md-2">
+              <input type="checkbox" class="btn-check" id="inlineCheckbox4" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="inlineCheckbox4">5 YRS</label>
+              <input type="checkbox" class="btn-check" id="inlineCheckbox5" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="inlineCheckbox5">10 YRS</label>
+              <input type="checkbox" class="btn-check" id="inlineCheckbox6" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="inlineCheckbox6">40 YRS</label>
+            </div>
+            <div class="d-flex flex-row col-md-2 mx-5">
+              <input type="checkbox" class="btn-check" id="inlineCheckbox7" autocomplete="off" checked>
+              <label class="btn btn-outline-primary" for="inlineCheckbox7">Spread</label>
+              <input type="checkbox" class="btn-check" id="inlineCheckbox8" autocomplete="off">
+              <label class="btn btn-outline-primary" for="inlineCheckbox8">Yield</label>
+              <input type="checkbox" class="btn-check" id="inlineCheckbox9" autocomplete="off">
+              <label class="btn btn-outline-primary" for="inlineCheckbox9">3MLSpread</label>
+            </div>
+          </div>
           <input class="float-start form-control form-control-sm my-4 w-25" type="search" v-model="filter" placeholder="Filter by company name ...">
           <table class="table table-bordered text-center">
             <thead class="border-bottom-0">
