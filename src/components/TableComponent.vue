@@ -5,27 +5,27 @@
         <div class="col-md-12">
           <div class="col-md-12 d-flex flex-row">
             <div class="d-block d-md-flex flex-row col-md-2">
-              <input type="checkbox" class="btn-check" id="inlineCheckbox1" autocomplete="off" checked>
-              <label class="btn btn-outline-primary" for="inlineCheckbox1">USD</label>
-              <input type="checkbox" class="btn-check" id="inlineCheckbox2" autocomplete="off">
+              <input type="checkbox" class="btn-check" value="USD" v-model="currency" id="inlineCheckbox1" @change="filterCurrency" autocomplete="off">
+              <label class="btn btn-outline-primary rounded-start" for="inlineCheckbox1">USD</label>
+              <input type="checkbox" class="btn-check" value="EUR" v-model="currency" id="inlineCheckbox2" @change="filterCurrency" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox2">EUR</label>
-              <input type="checkbox" class="btn-check" id="inlineCheckbox3" autocomplete="off">
+              <input type="checkbox" class="btn-check" value="CAD" v-model="currency" id="inlineCheckbox3" @change="filterCurrency" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox3">CAD</label>
             </div>
             <div class="d-flex flex-row col-md-2">
-              <input type="checkbox" class="btn-check" id="inlineCheckbox4" autocomplete="off" checked>
+              <input type="checkbox" class="btn-check" value="5" v-model="year" id="inlineCheckbox4" @change="filterYears" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox4">5 YRS</label>
-              <input type="checkbox" class="btn-check" id="inlineCheckbox5" autocomplete="off" checked>
+              <input type="checkbox" class="btn-check" value="10" v-model="year" id="inlineCheckbox5" @change="filterYears" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox5">10 YRS</label>
-              <input type="checkbox" class="btn-check" id="inlineCheckbox6" autocomplete="off" checked>
+              <input type="checkbox" class="btn-check" value="40" v-model="year" id="inlineCheckbox6" @change="filterYears" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox6">40 YRS</label>
             </div>
             <div class="d-flex flex-row col-md-2 mx-5">
-              <input type="checkbox" class="btn-check" id="inlineCheckbox7" autocomplete="off" checked>
+              <input type="checkbox" class="btn-check" value="Spread" v-model="spread" id="inlineCheckbox7" @change="filterSpreads" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox7">Spread</label>
-              <input type="checkbox" class="btn-check" id="inlineCheckbox8" autocomplete="off">
+              <input type="checkbox" class="btn-check" value="Yield" v-model="spread" id="inlineCheckbox8" @change="filterSpreads" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox8">Yield</label>
-              <input type="checkbox" class="btn-check" id="inlineCheckbox9" autocomplete="off">
+              <input type="checkbox" class="btn-check" value="3MLSpread" v-model="spread" id="inlineCheckbox9" @change="filterSpreads" autocomplete="off">
               <label class="btn btn-outline-primary" for="inlineCheckbox9">3MLSpread</label>
             </div>
           </div>
@@ -68,7 +68,7 @@
                 <th scope="col">FRN</th>
               </tr>
             </thead>
-            <tbody v-for="item in filteredData" :key="item.Id">
+            <tbody v-for="item in sortedData" :key="item.Id">
               <template v-if="Array.isArray(item.Quote)">
                 <tr @click="toggle(item.Id)">
                   <td>
@@ -89,7 +89,7 @@
                   <td></td>
                 </tr>
                 <template v-if="opened.includes(item.Id)">
-                  <tr v-for="(value, index) in item.Quote" :key="index">
+                  <tr v-for="(value, index) in dataFiltered" :key="index">
                     <td></td>
                     <td>{{ index }} : {{ value }}</td>
                     <td></td>
@@ -137,7 +137,11 @@ export default {
       filter: '',
       sortKey: '',
       sortedData: this.data,
-      sortedbyASC: false
+      sortedbyASC: false,
+      dataFiltered: [],
+      currency: [],
+      year: [],
+      spread: []
     }
   },
   methods: {
@@ -166,9 +170,71 @@ export default {
       }
 
       this.sortKey = sortBy
-    }
-  },
-  computed: {
+    },
+    filterCurrency () {
+      let sortedData = this.data
+
+      if (this.currency.length !== 0) {
+        sortedData = sortedData.filter((data) => {
+          if (Array.isArray(data.Quote)) {
+            for (let j = 0; j < data.Quote.length; j++) {
+              for (let i = 0; i < this.currency.length; i++) {
+                if (this.currency[i] === data.Quote[j].Currency) {
+                  return data.Quote[j].Currency.includes(this.currency[i])
+                }
+              }
+            }
+          }
+          return false
+        })
+      }
+
+      this.sortedData = sortedData
+    },
+    filterYears () {
+      let sortedData = this.data
+
+      if (this.year.length !== 0) {
+        sortedData = sortedData.filter((data) => {
+          if (Array.isArray(data.Quote)) {
+            for (let j = 0; j < data.Quote.length; j++) {
+              for (let i = 0; i < this.year.length; i++) {
+                if (this.year[i] === data.Quote[j].Years.toString()) {
+                  return data.Quote[j].Years.toString().includes(this.year[i])
+                }
+              }
+            }
+          }
+          return false
+        })
+      }
+
+      this.sortedData = sortedData
+    },
+    filterSpreads () {
+      let sortedData = this.data
+
+      if (this.spread.length !== 0) {
+        sortedData = sortedData.filter((data) => {
+          if (Array.isArray(data.Quote)) {
+            for (let j = 0; j < data.Quote.length; j++) {
+              for (let i = 0; i < this.spread.length; i++) {
+                if (data.Quote[j].Spread !== null && this.spread[i] === 'Spread') {
+                  return data.Quote[j].Spread
+                } else if (data.Quote[j].Yield !== null && this.spread[i] === 'Yield') {
+                  return data.Quote[j].Yield
+                } else if (this.spread[i] === '3MLSpread') {
+                  return data.Quote[j]
+                }
+              }
+            }
+          }
+          return false
+        })
+      }
+
+      this.sortedData = sortedData
+    },
     filteredData () {
       let sortedData = this.data
       if (this.filter !== '' && this.filter) {
@@ -178,8 +244,11 @@ export default {
             .includes(this.filter.toUpperCase())
         })
       }
-      return sortedData
+      this.sortedData = sortedData
     }
+  },
+  created () {
+    this.filteredData()
   }
 }
 </script>
